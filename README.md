@@ -1,14 +1,10 @@
-# conway-life
-
-A Clojure library designed to ... well, that part is up to you.
-
-## Usage
-
-FIXME
+While rereading _The Recursive Universe: Cosmic Complexity and the Limits of
+Scientific Knowledge_ written by William Poundstone in 1985, I decided to give
+[Conway's Game of Life](http://www.conwaylife.com/) a try in Clojure.
 
 ## License
 
-Copyright © 2023 FIXME
+Copyright © 2023 Gerrit Bouknecht
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
