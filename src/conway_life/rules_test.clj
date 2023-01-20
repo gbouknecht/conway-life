@@ -6,7 +6,7 @@
 (deftest about-rules
 
   (letfn [(check [number-of-on-neighbors & {:keys [current-state next-state]}]
-            (is (= next-state (rules/next-state current-state number-of-on-neighbors))
+            (is (= (rules/next-state current-state number-of-on-neighbors) next-state)
                 (str "number-of-on-neighbors=" number-of-on-neighbors)))]
 
     (testing "'off' cell"
