@@ -1,7 +1,7 @@
-(ns conway-life.board-test
+(ns conway-life.logic.board-test
   (:require [clojure.test :refer :all]
-            [conway-life.board :as board]
-            [conway-life.common :refer [off on]]))
+            [conway-life.logic.board :as board]
+            [conway-life.logic.common :refer [off on]]))
 
 (deftest about-board
 

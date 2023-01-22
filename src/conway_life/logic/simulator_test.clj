@@ -1,9 +1,9 @@
-(ns conway-life.simulator-test
+(ns conway-life.logic.simulator-test
   (:require
     [clojure.string :as str]
     [clojure.test :refer :all]
-    [conway-life.board :as board]
-    [conway-life.simulator :as simulator]))
+    [conway-life.logic.board :as board]
+    [conway-life.logic.simulator :as simulator]))
 
 (defn- set-pattern [board [x y] pattern]
   (letfn [(to-int [^Character c] (Character/digit c 10))]

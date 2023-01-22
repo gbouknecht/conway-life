@@ -1,7 +1,7 @@
-(ns conway-life.rules-test
+(ns conway-life.logic.rules-test
   (:require [clojure.test :refer :all]
-            [conway-life.rules :as rules]
-            [conway-life.common :refer [off on]]))
+            [conway-life.logic.rules :as rules]
+            [conway-life.logic.common :refer [off on]]))
 
 (deftest about-rules
 

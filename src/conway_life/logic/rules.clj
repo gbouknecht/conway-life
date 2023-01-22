@@ -1,5 +1,5 @@
-(ns conway-life.rules
-  (:require [conway-life.common :refer [off on]]))
+(ns conway-life.logic.rules
+  (:require [conway-life.logic.common :refer [off on]]))
 
 (defn next-state [current-state number-of-on-neighbors]
   (cond

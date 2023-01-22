@@ -1,5 +1,5 @@
-(ns conway-life.board
-  (:require [conway-life.common :refer [off on]]))
+(ns conway-life.logic.board
+  (:require [conway-life.logic.common :refer [off on]]))
 
 (defn make-board [] {:generation-count 0 :on-cells #{}})
 (defn make-cell [x y] [x y])

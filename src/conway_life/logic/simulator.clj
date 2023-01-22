@@ -1,8 +1,8 @@
-(ns conway-life.simulator
+(ns conway-life.logic.simulator
   (:require [clojure.set :refer [union]]
-            [conway-life.board :as board]
-            [conway-life.common :refer [off on]]
-            [conway-life.rules :as rules]))
+            [conway-life.logic.board :as board]
+            [conway-life.logic.common :refer [off on]]
+            [conway-life.logic.rules :as rules]))
 
 (defn next-generation [board]
   (let [on-cells (board/on-cells board)
