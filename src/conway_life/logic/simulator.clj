@@ -7,7 +7,7 @@
 (defn next-generation [board]
   (let [on-cells (board/on-cells board)
         counted-neighbors (reduce (fn [counted-neighbors on-cell]
-                                    (let [[x y] (board/cell-coord on-cell)
+                                    (let [[x y] (board/cell-coords on-cell)
                                           neighbor-cells (for [dy [-1 0 1] dx [-1 0 1] :when (not (= 0 dx dy))]
                                                            (board/make-cell (+ x dx) (+ y dy)))]
                                       (reduce (fn [counted-neighbors neighbor-cell]

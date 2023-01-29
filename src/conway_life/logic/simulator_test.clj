@@ -13,8 +13,9 @@
                  (reverse)
                  (map-indexed (fn [dy row] (map-indexed (fn [dx state] [[dx dy] (to-int state)]) row)))
                  (apply concat)))))
-(defn- get-pattern [board [x y width height]]
-  (->> (for [dy (range height) dx (range width)] (if (board/cell-on? board (board/make-cell (+ x dx) (+ y dy))) "1" "0"))
+(defn- get-pattern [board [_ _ width _ :as bounds]]
+  (->> (board/all-coords bounds)
+       (map #(if (board/on-cell? board (apply board/make-cell %)) "1" "0"))
        (partition width)
        (reverse)
        (mapv str/join)))
