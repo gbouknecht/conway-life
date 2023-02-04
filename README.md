@@ -1,6 +1,22 @@
 While rereading _The Recursive Universe: Cosmic Complexity and the Limits of
 Scientific Knowledge_ written by William Poundstone in 1985, I decided to give
-[Conway's Game of Life](http://www.conwaylife.com/) a try in Clojure.
+[Conway's Game of Life](http://www.conwaylife.com/) a try
+in [Clojure](https://clojure.org).
+
+To start, install [Leiningen](https://leiningen.org) and run `lein run`.
+
+| Key      | Description                           |
+|----------|---------------------------------------|
+| `-`      | zoom out                              |
+| `=`, `+` | zoom in                               |
+| `0`      | set zoom to 1 pixel per cel           |
+| `s`      | start/stop                            |
+| `n`      | next                                  |
+| `c`      | move board origin to center of window |
+| `h`      | move board left                       |
+| `l`      | move board right                      |
+| `k`      | move board up                         |
+| `j`      | move board down                       |
 
 ## License
 

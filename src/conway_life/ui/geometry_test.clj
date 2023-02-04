@@ -10,7 +10,7 @@
       (is (nil? (:window-size geometry)))
       (is (= (:cell-size geometry) 1))))
 
-  (testing "should be able overwrite defaults"
+  (testing "should be able to overwrite defaults"
     (let [geometry (geometry/make-geometry :center [2 3] :window-size [400 500] :cell-size 4)]
       (is (= (:center geometry) [2 3]))
       (is (= (:window-size geometry) [400 500]))

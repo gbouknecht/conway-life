@@ -2,6 +2,7 @@
   (:require [conway-life.logic.board :as board]
             [conway-life.logic.simulator :as simulator]
             [conway-life.ui.geometry :as geometry]
+            [conway-life.ui.keyboard :as keyboard]
             [conway-life.ui.ui-state :as ui-state]
             [quil.core :as q]
             [quil.middleware :as m]))
@@ -13,12 +14,14 @@
         fill-percentage 15
         geometry (geometry/make-geometry :window-size window-size
                                          :cell-size cell-size)]
-    (ui-state/make-initial-ui-state fill-size fill-percentage geometry)))
+    (ui-state/make-initial-ui-state fill-size fill-percentage geometry :mode :running)))
 
-(defn- update-ui-state [ui-state]
-  (-> ui-state
-      (update :board simulator/next-generation)
-      (assoc-in [:geometry :window-size] [(q/width) (q/height)])))
+(defn update-ui-state [ui-state]
+  (letfn [(match-mode? [& modes] (contains? (set modes) (:mode ui-state)))]
+    (cond-> ui-state
+            (match-mode? :running :step) (update :board simulator/next-generation)
+            (match-mode? :step) (assoc :mode :stopped)
+            :always (assoc-in [:geometry :window-size] [(q/width) (q/height)]))))
 
 (defn- draw-ui-state [ui-state]
   (let [board (:board ui-state)
@@ -42,7 +45,7 @@
         (if (> window-y header-height)
           (if (= cell-size 1)
             (q/point window-x window-y)
-            (q/rect window-x window-y cell-size cell-size)))))))
+            (q/rect window-x window-y (dec cell-size) (dec cell-size))))))))
 
 (declare conway-life)
 
@@ -55,6 +58,7 @@
     :setup setup-ui-state
     :update update-ui-state
     :draw draw-ui-state
+    :key-typed keyboard/key-typed
     :middleware [m/fun-mode]))
 
 (defn -main [& _] (start))

@@ -23,4 +23,12 @@
               ui-state (ui-state/make-initial-ui-state [width height] percentage geometry)]
           (is (= @saved-fill-randomly-args [@saved-make-board-result bounds percentage]))
           (is (= (:board ui-state) @saved-fill-randomly-result))
-          (is (= (:geometry ui-state) geometry)))))))
+          (is (= (:geometry ui-state) geometry))))))
+
+  (testing "should have defaults"
+    (let [ui-state (ui-state/make-initial-ui-state [500 300] 75 (geometry/make-geometry))]
+      (is (= (:mode ui-state) :stopped))))
+
+  (testing "should be able to overwrite defaults"
+    (let [ui-state (ui-state/make-initial-ui-state [500 300] 75 (geometry/make-geometry) :mode :step)]
+      (is (= (:mode ui-state) :step)))))
