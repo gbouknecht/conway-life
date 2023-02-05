@@ -14,7 +14,7 @@
         fill-percentage 15
         geometry (geometry/make-geometry :window-size window-size
                                          :cell-size cell-size)]
-    (ui-state/make-initial-ui-state fill-size fill-percentage geometry :mode :running)))
+    (ui-state/make-ui-state fill-size fill-percentage geometry :mode :running)))
 
 (defn update-ui-state [ui-state]
   (letfn [(match-mode? [& modes] (contains? (set modes) (:mode ui-state)))]

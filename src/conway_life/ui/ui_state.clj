@@ -1,8 +1,8 @@
 (ns conway-life.ui.ui-state
   (:require [conway-life.logic.board :as board]))
 
-(defn make-initial-ui-state [fill-size fill-percentage geometry
-                             & {:keys [mode] :or {mode :stopped}}]
+(defn make-ui-state [fill-size fill-percentage geometry
+                     & {:keys [mode] :or {mode :stopped}}]
   (let [[width height] fill-size
         x (- (/ width 2))
         y (- (/ height 2))

@@ -6,7 +6,7 @@
 
 (deftest about-keyboard
 
-  (let [ui-state (ui-state/make-initial-ui-state [0 0] 0 (geometry/make-geometry))
+  (let [ui-state (ui-state/make-ui-state [0 0] 0 (geometry/make-geometry))
         keys-typed (fn [keys] (reduce (fn [ui-state key] (keyboard/key-typed ui-state {:key key}))
                                       ui-state keys))]
 
