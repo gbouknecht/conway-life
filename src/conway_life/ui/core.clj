@@ -2,11 +2,14 @@
   (:require [conway-life.logic.board :as board]
             [conway-life.logic.simulator :as simulator]
             [conway-life.ui.geometry :as geometry]
+            [conway-life.ui.input-ui-state :as input-ui-state]
             [conway-life.ui.keyboard :as keyboard]
+            [conway-life.ui.mouse :as mouse]
             [conway-life.ui.ui-state :as ui-state]
             [quil.core :as q]
             [quil.middleware :as m]))
 
+(defn time-ms [] (System/currentTimeMillis))
 (defn- setup-ui-state []
   (let [window-size [(q/width) (q/height)]
         cell-size 2
@@ -14,15 +17,16 @@
         fill-percentage 15
         geometry (geometry/make-geometry :window-size window-size
                                          :cell-size cell-size)]
-    (ui-state/make-ui-state fill-size fill-percentage geometry :mode :running)))
-
+    (merge (ui-state/make-ui-state fill-size fill-percentage geometry :mode :running)
+           (input-ui-state/make-input-ui-state :time-ms (time-ms)
+                                               :single-clicked mouse/single-clicked))))
 (defn update-ui-state [ui-state]
   (letfn [(match-mode? [& modes] (contains? (set modes) (:mode ui-state)))]
     (cond-> ui-state
             (match-mode? :running :step) (update :board simulator/next-generation)
             (match-mode? :step) (assoc :mode :stopped)
-            :always (assoc-in [:geometry :window-size] [(q/width) (q/height)]))))
-
+            :always (assoc-in [:geometry :window-size] [(q/width) (q/height)])
+            :always (input-ui-state/update-time-ms (time-ms)))))
 (defn- draw-ui-state [ui-state]
   (let [board (:board ui-state)
         geometry (:geometry ui-state)
@@ -32,12 +36,13 @@
         cell-size (:cell-size geometry)]
     (q/background 255)
     (q/fill 0)
-    (q/text (format "Generation %d, Number of cells %d, Center (%d, %d), Window size %dx%d, Cell size %dx%d"
+    (q/text (format "Generation %d, Number of cells %d, Center (%d, %d), Window size %dx%d, Cell size %dx%d, Mode %s"
                     (:generation-count board)
                     (board/number-of-on-cells board)
                     center-x center-y
                     window-width window-height
-                    cell-size cell-size)
+                    cell-size cell-size
+                    (:mode ui-state))
             20 20)
     (q/line 0 header-height (q/width) header-height)
     (doseq [coords (board/all-on-cell-coords board)]
@@ -46,9 +51,8 @@
           (if (= cell-size 1)
             (q/point window-x window-y)
             (q/rect window-x window-y (dec cell-size) (dec cell-size))))))))
-
+(defn- mouse-clicked [ui-state event] (input-ui-state/add-click-event ui-state event))
 (declare conway-life)
-
 (defn start []
   (q/defsketch
     conway-life
@@ -59,6 +63,6 @@
     :update update-ui-state
     :draw draw-ui-state
     :key-typed keyboard/key-typed
+    :mouse-clicked mouse-clicked
     :middleware [m/fun-mode]))
-
 (defn -main [& _] (start))

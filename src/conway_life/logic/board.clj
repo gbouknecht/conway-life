@@ -7,6 +7,7 @@
 (defn number-of-on-cells [board] (count (:on-cells board)))
 (defn set-cell-state [board cell state] (update board :on-cells (condp = state off disj on conj) cell))
 (defn on-cell? [board cell] (contains? (:on-cells board) cell))
+(defn toggle-cell-state [board cell] (set-cell-state board cell (if (on-cell? board cell) off on)))
 (defn on-cells [board] (:on-cells board))
 (defn all-coords [[x y width height]] (for [dy (range height) dx (range width)] [(+ x dx) (+ y dy)]))
 (defn all-on-cell-coords [board] (->> board on-cells (map cell-coords)))

@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [conway-life.ui.core :as core]
             [conway-life.ui.geometry :as geometry]
+            [conway-life.ui.input-ui-state :as input-ui-state]
             [conway-life.ui.ui-state :as ui-state]
             [quil.core :as q]))
 
@@ -11,7 +12,8 @@
         window-width 500
         window-height 600]
     (with-redefs [q/width (constantly window-width)
-                  q/height (constantly window-height)]
+                  q/height (constantly window-height)
+                  input-ui-state/update-time-ms (fn [ui-state time-ms] (assoc ui-state :time-ms time-ms))]
 
       (testing "should go to next generation when mode is :running"
         (let [next-ui-state (core/update-ui-state (assoc ui-state :mode :running))]
@@ -29,4 +31,9 @@
           (is (= (get-in next-ui-state [:mode]) :stopped))))
 
       (testing "should update :geometry :window-size"
-        (is (= (get-in (core/update-ui-state ui-state) [:geometry :window-size]) [window-width window-height]))))))
+        (is (= (get-in (core/update-ui-state ui-state) [:geometry :window-size]) [window-width window-height])))
+
+      (testing "should update time"
+        (with-redefs [core/time-ms (constantly 13)]
+          (let [next-ui-state (core/update-ui-state ui-state)]
+            (is (= (:time-ms next-ui-state) 13))))))))

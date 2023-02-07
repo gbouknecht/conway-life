@@ -29,6 +29,17 @@
       (is (true? (board/on-cell? board [6 6])))
       (is (= (set (board/all-on-cell-coords board)) #{[8 1] [2 3] [6 6]}))))
 
+  (testing "should be able to toggle state of cell between 'on' and 'off'"
+    (let [board (-> (board/make-board)
+                    (board/toggle-cell-state [5 7])
+                    (board/toggle-cell-state [5 8])
+                    (board/toggle-cell-state [8 1])
+                    (board/toggle-cell-state [5 7]))]
+      (is (= (board/number-of-on-cells board) 2))
+      (is (false? (board/on-cell? board [5 7])))
+      (is (true? (board/on-cell? board [5 8])))
+      (is (true? (board/on-cell? board [8 1])))))
+
   (testing "should be able to provide coordinates for given bounds"
     (let [bounds [4 7 2 3]]
       (is (= (board/all-coords bounds) [[4 7] [5 7] [4 8] [5 8] [4 9] [5 9]]))))
