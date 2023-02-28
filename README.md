@@ -12,6 +12,7 @@ To start, install [Leiningen](https://leiningen.org) and run `lein run`.
 | `0`      | set zoom to 1 pixel per cel           |
 | `s`      | start/stop                            |
 | `n`      | next                                  |
+| `C`      | clear board                           |
 | `c`      | move board origin to center of window |
 | `h`      | move board left                       |
 | `l`      | move board right                      |

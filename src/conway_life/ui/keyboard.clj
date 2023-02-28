@@ -1,4 +1,5 @@
-(ns conway-life.ui.keyboard)
+(ns conway-life.ui.keyboard
+  (:require [conway-life.logic.board :as board]))
 
 (defn key-typed [ui-state event]
   (letfn [(match? [& keys] (contains? (set keys) (:key event)))]
@@ -8,6 +9,7 @@
             (match? :0) (assoc-in [:geometry :cell-size] 1)
             (match? :s) (update :mode #(if (= % :running) :stopped :running))
             (match? :n) (assoc :mode :step)
+            (match? :C) (assoc :board (board/make-board) :mode :stopped)
             (match? :c) (assoc-in [:geometry :center] [0 0])
             (match? :h) (update-in [:geometry :center] (fn [[x y]] [(+ x 10) y]))
             (match? :l) (update-in [:geometry :center] (fn [[x y]] [(- x 10) y]))
