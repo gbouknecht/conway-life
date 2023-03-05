@@ -7,3 +7,4 @@
     (let [[x y] (geometry/to-coords [window-x window-y] (:geometry ui-state))]
       (update ui-state :board #(board/toggle-cell-state % (board/make-cell x y))))
     ui-state))
+(def double-clicked single-clicked)

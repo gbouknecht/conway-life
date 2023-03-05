@@ -19,7 +19,8 @@
                                          :cell-size cell-size)]
     (merge (ui-state/make-ui-state fill-size fill-percentage geometry :mode :running)
            (input-ui-state/make-input-ui-state :time-ms (time-ms)
-                                               :single-clicked mouse/single-clicked))))
+                                               :single-clicked mouse/single-clicked
+                                               :double-clicked mouse/double-clicked))))
 (defn update-ui-state [ui-state]
   (letfn [(match-mode? [& modes] (contains? (set modes) (:mode ui-state)))]
     (cond-> ui-state
