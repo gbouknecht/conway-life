@@ -12,7 +12,7 @@
         keys-typed (fn [ui-state keys] (reduce (fn [ui-state key] (keyboard/key-typed ui-state {:key key}))
                                                ui-state keys))]
 
-    (testing "should zoom out on `-`, zoom in on `=` and `+` and reset on '0'"
+    (testing "should zoom out on '-', zoom in on '=' and '+' and reset on '0'"
       (letfn [(cell-size-after [& keys] (get-in (keys-typed ui-state keys) [:geometry :cell-size]))]
         (is (= (cell-size-after :-) 1))
         (is (= (cell-size-after :=) 2))
@@ -20,6 +20,12 @@
         (is (= (cell-size-after := :=) 3))
         (is (= (cell-size-after := := :-) 2))
         (is (= (cell-size-after := := :0) 1))))
+
+    (testing "should show/hide raster on 'r'"
+      (letfn [(show-raster-after [& keys] (:show-raster (keys-typed ui-state keys)))]
+        (is (false? (show-raster-after)))
+        (is (true? (show-raster-after :r)))
+        (is (false? (show-raster-after :r :r)))))
 
     (testing "should start/stop on 's' and step on 'n'"
       (letfn [(mode-after [& keys] (:mode (keys-typed ui-state keys)))]

@@ -35,6 +35,7 @@
         header-height 30
         cell-size (:cell-size geometry)]
     (q/background 255)
+    (q/stroke 0)
     (q/fill 0)
     (q/text (format "Generation %d, Number of cells %d, Center (%d, %d), Window size %dx%d, Cell size %dx%d, Mode %s"
                     (:generation-count board)
@@ -50,7 +51,15 @@
         (if (> window-y header-height)
           (if (= cell-size 1)
             (q/point window-x window-y)
-            (q/rect window-x window-y (dec cell-size) (dec cell-size))))))))
+            (q/rect window-x window-y (dec cell-size) (dec cell-size))))))
+    (if (and (:show-raster ui-state) (> cell-size 1))
+      (do
+        (q/stroke 182)
+        (doseq [window-x (range (mod (quot window-width 2) cell-size) window-width cell-size)]
+          (q/line window-x header-height window-x window-height))
+        (doseq [window-y (range (mod (- window-height (quot window-height 2)) cell-size) window-height cell-size)]
+          (let [window-y (max header-height window-y)]
+            (q/line 0 window-y window-width window-y)))))))
 (defn- mouse-clicked [ui-state event] (input-ui-state/add-click-event ui-state event))
 (declare conway-life)
 (defn start []

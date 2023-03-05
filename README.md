@@ -10,6 +10,7 @@ To start, install [Leiningen](https://leiningen.org) and run `lein run`.
 | `-`      | zoom out                              |
 | `=`, `+` | zoom in                               |
 | `0`      | set zoom to 1 pixel per cel           |
+| `r`      | show raster                           |
 | `s`      | start/stop                            |
 | `n`      | next                                  |
 | `C`      | clear board                           |
