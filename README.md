@@ -20,6 +20,12 @@ To start, install [Leiningen](https://leiningen.org) and run `lein run`.
 | `k`      | move board up                         |
 | `j`      | move board down                       |
 
+| Mouse        | Mode         | Description                           |
+|--------------|--------------|---------------------------------------|
+| single click | :stopped     | toggle cell                           |
+| double click | :stopped     | toggle cell                           |
+| double click | not :stopped | move clicked cell to center of window |
+
 ## License
 
 Copyright © 2023 Gerrit Bouknecht
