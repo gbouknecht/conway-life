@@ -47,7 +47,7 @@
           (is (= 0 (get-in ui-state [:board :generation-count])))
           (is (= 0 (board/number-of-on-cells (:board ui-state)))))))
 
-    (testing "should move board left on 'h', right on 'l', up on 'k', down on 'j' and center on 'c'"
+    (testing "should move board left/right/up/down on 'h', 'l', 'k', 'j' and center on 'c'"
       (letfn [(center-after [& keys] (get-in (keys-typed ui-state keys) [:geometry :center]))]
         (is (= (center-after :h) [10 0]))
         (is (= (center-after :h :h) [20 0]))
@@ -58,4 +58,28 @@
         (is (= (center-after :j) [0 10]))
         (is (= (center-after :j :j) [0 20]))
         (is (= (center-after :h :h :h :k :l :j :j :j :j) [20 30]))
-        (is (= (center-after :h :h :h :k :l :j :j :j :j :c) [0 0]))))))
+        (is (= (center-after :h :h :h :k :l :j :j :j :j :c) [0 0]))))
+
+    (testing "should let move board step size depends on cell size"
+      (letfn [(center-after [cell-size & keys]
+                (let [ui-state (assoc-in ui-state [:geometry :cell-size] cell-size)]
+                  (get-in (keys-typed ui-state keys) [:geometry :center])))]
+        (is (= (center-after 2 :h) [5 0]))
+        (is (= (center-after 3 :h) [3 0]))
+        (is (= (center-after 4 :h) [2 0]))
+        (is (= (center-after 6 :h) [1 0]))
+        (is (= (center-after 10 :h) [1 0]))
+        (is (= (center-after 11 :h) [1 0]))
+        (is (= (center-after 20 :h) [1 0]))
+        (is (= (center-after 2 :l) [-5 0]))
+        (is (= (center-after 10 :l) [-1 0]))
+        (is (= (center-after 11 :l) [-1 0]))
+        (is (= (center-after 20 :l) [-1 0]))
+        (is (= (center-after 2 :k) [0 -5]))
+        (is (= (center-after 10 :k) [0 -1]))
+        (is (= (center-after 11 :k) [0 -1]))
+        (is (= (center-after 20 :k) [0 -1]))
+        (is (= (center-after 2 :j) [0 5]))
+        (is (= (center-after 10 :j) [0 1]))
+        (is (= (center-after 11 :j) [0 1]))
+        (is (= (center-after 20 :j) [0 1]))))))
