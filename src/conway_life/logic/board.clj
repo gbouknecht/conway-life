@@ -2,7 +2,9 @@
   (:require [conway-life.logic.common :refer [off on]]))
 
 (defn make-board [] {:generation-count 0 :on-cells #{}})
-(defn make-cell [x y] [x y])
+(defn make-cell
+  ([[x y]] (make-cell x y))
+  ([x y] [x y]))
 (defn cell-coords [cell] cell)
 (defn number-of-on-cells [board] (count (:on-cells board)))
 (defn set-cell-state [board cell state] (update board :on-cells (condp = state off disj on conj) cell))

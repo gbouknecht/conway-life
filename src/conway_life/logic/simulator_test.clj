@@ -15,7 +15,7 @@
                  (apply concat)))))
 (defn- get-pattern [board [_ _ width _ :as bounds]]
   (->> (board/all-coords bounds)
-       (map #(if (board/on-cell? board (apply board/make-cell %)) "1" "0"))
+       (map #(if (board/on-cell? board (board/make-cell %)) "1" "0"))
        (partition width)
        (reverse)
        (mapv str/join)))

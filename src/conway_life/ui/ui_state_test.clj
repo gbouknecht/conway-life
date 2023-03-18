@@ -27,8 +27,15 @@
 
   (testing "should have defaults"
     (let [ui-state (ui-state/make-ui-state [500 300] 75 (geometry/make-geometry))]
-      (is (= (:mode ui-state) :stopped))))
+      (is (= (:mode ui-state) :stopped))
+      (is (= (:cursor ui-state) [0 0]))
+      (is (false? (:show-raster ui-state)))))
 
   (testing "should be able to overwrite defaults"
-    (let [ui-state (ui-state/make-ui-state [500 300] 75 (geometry/make-geometry) :mode :step)]
-      (is (= (:mode ui-state) :step)))))
+    (let [ui-state (ui-state/make-ui-state [500 300] 75 (geometry/make-geometry)
+                                           :mode :step
+                                           :cursor [2 3]
+                                           :show-raster true)]
+      (is (= (:mode ui-state) :step))
+      (is (= (:cursor ui-state) [2 3]))
+      (is (true? (:show-raster ui-state))))))

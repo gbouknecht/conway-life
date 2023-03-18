@@ -5,20 +5,24 @@ in [Clojure](https://clojure.org).
 
 To start, install [Leiningen](https://leiningen.org) and run `lein run`.
 
-| Key      | Description                           |
-|----------|---------------------------------------|
-| `-`      | zoom out                              |
-| `=`, `+` | zoom in                               |
-| `0`      | set zoom to 1 pixel per cel           |
-| `r`      | show raster                           |
-| `s`      | start/stop                            |
-| `n`      | next                                  |
-| `C`      | clear board                           |
-| `c`      | move board origin to center of window |
-| `h`      | move board left                       |
-| `l`      | move board right                      |
-| `k`      | move board up                         |
-| `j`      | move board down                       |
+| Key      | Mode     | Description                                                |
+|----------|----------|------------------------------------------------------------|
+| `-`      |          | zoom out                                                   |
+| `=`, `+` |          | zoom in                                                    |
+| `0`      |          | set zoom to 1 pixel per cel                                |
+| `r`      |          | show raster                                                |
+| `s`      |          | start/stop                                                 |
+| `n`      |          | next                                                       |
+| `C`      |          | clear board                                                |
+| `c`      |          | move board origin to center of window and cursor to origin |
+| `h`      | :running | move board left                                            |
+| `h`      | :stopped | move cursor left                                           |
+| `l`      | :running | move board right                                           |
+| `l`      | :stopped | move cursor right                                          |
+| `k`      | :running | move board up                                              |
+| `k`      | :stopped | move cursor up                                             |
+| `j`      | :running | move board down                                            |
+| `j`      | :stopped | move cursor down                                           |
 
 | Mouse        | Mode         | Description                           |
 |--------------|--------------|---------------------------------------|
