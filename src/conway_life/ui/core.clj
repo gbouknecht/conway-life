@@ -83,7 +83,7 @@
     :setup setup
     :update update-ui-state
     :draw draw
-    :key-typed keyboard/key-typed
+    :key-pressed keyboard/key-pressed
     :mouse-clicked mouse-clicked
     :middleware [m/fun-mode]))
 (defn -main [& _] (start))

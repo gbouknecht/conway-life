@@ -9,11 +9,11 @@
 (deftest about-keyboard
 
   (let [ui-state (ui-state/make-ui-state [0 0] 0 (geometry/make-geometry))
-        keys-typed (fn [ui-state keys] (reduce (fn [ui-state key] (keyboard/key-typed ui-state {:key key}))
-                                               ui-state keys))]
+        keys-pressed (fn [ui-state keys] (reduce (fn [ui-state key] (keyboard/key-pressed ui-state {:key key}))
+                                                 ui-state keys))]
 
     (testing "should zoom out on '-', zoom in on '=' and '+' and reset on '0'"
-      (letfn [(cell-size-after [& keys] (get-in (keys-typed ui-state keys) [:geometry :cell-size]))]
+      (letfn [(cell-size-after [& keys] (get-in (keys-pressed ui-state keys) [:geometry :cell-size]))]
         (is (= (cell-size-after :-) 1))
         (is (= (cell-size-after :=) 2))
         (is (= (cell-size-after :+) 2))
@@ -22,13 +22,13 @@
         (is (= (cell-size-after := := :0) 1))))
 
     (testing "should show/hide raster on 'r'"
-      (letfn [(show-raster-after [& keys] (:show-raster (keys-typed ui-state keys)))]
+      (letfn [(show-raster-after [& keys] (:show-raster (keys-pressed ui-state keys)))]
         (is (false? (show-raster-after)))
         (is (true? (show-raster-after :r)))
         (is (false? (show-raster-after :r :r)))))
 
     (testing "should start/stop on 's' and step on 'n'"
-      (letfn [(mode-after [& keys] (:mode (keys-typed ui-state keys)))]
+      (letfn [(mode-after [& keys] (:mode (keys-pressed ui-state keys)))]
         (is (= (mode-after :s) :running))
         (is (= (mode-after :s :s) :stopped))
         (is (= (mode-after :s :s :s) :running))
@@ -43,82 +43,82 @@
                          (update :board simulator/next-generation))]
         (is (= 2 (get-in ui-state [:board :generation-count])))
         (is (< 0 (board/number-of-on-cells (:board ui-state))))
-        (let [ui-state (keys-typed ui-state [:C])]
+        (let [ui-state (keys-pressed ui-state [:C])]
           (is (= 0 (get-in ui-state [:board :generation-count])))
           (is (= 0 (board/number-of-on-cells (:board ui-state)))))))
 
     (letfn [(center-after [mode & keys]
               (let [ui-state (assoc ui-state :mode mode)]
-                (get-in (keys-typed ui-state keys) [:geometry :center])))
+                (get-in (keys-pressed ui-state keys) [:geometry :center])))
             (cursor-after [mode & keys]
               (let [ui-state (assoc ui-state :mode mode)]
-                (get (keys-typed ui-state keys) :cursor)))]
+                (get (keys-pressed ui-state keys) :cursor)))]
 
-      (testing "should move board left/right/up/down on 'h', 'l', 'k', 'j' when mode is :running"
-        (is (= (center-after :running :h) [10 0]))
-        (is (= (center-after :running :h :h) [20 0]))
-        (is (= (center-after :running :l) [-10 0]))
-        (is (= (center-after :running :l :l) [-20 0]))
-        (is (= (center-after :running :k) [0 -10]))
-        (is (= (center-after :running :k :k) [0 -20]))
-        (is (= (center-after :running :j) [0 10]))
-        (is (= (center-after :running :j :j) [0 20]))
-        (is (= (center-after :running :h :h :h :k :l :j :j :j :j) [20 30])))
+      (testing "should move board on left/right/up/down when mode is :running"
+        (is (= (center-after :running :left) [10 0]))
+        (is (= (center-after :running :left :left) [20 0]))
+        (is (= (center-after :running :right) [-10 0]))
+        (is (= (center-after :running :right :right) [-20 0]))
+        (is (= (center-after :running :up) [0 -10]))
+        (is (= (center-after :running :up :up) [0 -20]))
+        (is (= (center-after :running :down) [0 10]))
+        (is (= (center-after :running :down :down) [0 20]))
+        (is (= (center-after :running :left :left :left :up :right :down :down :down :down) [20 30])))
 
-      (testing "should not move board left/right/up/down on 'h', 'l', 'k', 'j' when mode is :stopped"
-        (is (= (center-after :stopped :h) [0 0]))
-        (is (= (center-after :stopped :l) [0 0]))
-        (is (= (center-after :stopped :k) [0 0]))
-        (is (= (center-after :stopped :j) [0 0])))
+      (testing "should not move board on left/right/up/down when mode is :stopped"
+        (is (= (center-after :stopped :left) [0 0]))
+        (is (= (center-after :stopped :right) [0 0]))
+        (is (= (center-after :stopped :up) [0 0]))
+        (is (= (center-after :stopped :down) [0 0])))
 
-      (testing "should move cursor left/right/up/down on 'h', 'l', 'k', 'j' when mode is :stopped"
-        (is (= (cursor-after :stopped :h) [-1 0]))
-        (is (= (cursor-after :stopped :h :h) [-2 0]))
-        (is (= (cursor-after :stopped :l) [1 0]))
-        (is (= (cursor-after :stopped :l :l) [2 0]))
-        (is (= (cursor-after :stopped :k) [0 1]))
-        (is (= (cursor-after :stopped :k :k) [0 2]))
-        (is (= (cursor-after :stopped :j) [0 -1]))
-        (is (= (cursor-after :stopped :j :j) [0 -2]))
-        (is (= (cursor-after :stopped :h :h :h :k :l :j :j :j :j) [-2 -3])))
+      (testing "should move cursor on left/right/up/down when mode is :stopped"
+        (is (= (cursor-after :stopped :left) [-1 0]))
+        (is (= (cursor-after :stopped :left :left) [-2 0]))
+        (is (= (cursor-after :stopped :right) [1 0]))
+        (is (= (cursor-after :stopped :right :right) [2 0]))
+        (is (= (cursor-after :stopped :up) [0 1]))
+        (is (= (cursor-after :stopped :up :up) [0 2]))
+        (is (= (cursor-after :stopped :down) [0 -1]))
+        (is (= (cursor-after :stopped :down :down) [0 -2]))
+        (is (= (cursor-after :stopped :left :left :left :up :right :down :down :down :down) [-2 -3])))
 
-      (testing "should not move cursor left/right/up/down on 'h', 'l', 'k', 'j' when mode is :running"
-        (is (= (cursor-after :running :h) [0 0]))
-        (is (= (cursor-after :running :l) [0 0]))
-        (is (= (cursor-after :running :k) [0 0]))
-        (is (= (cursor-after :running :j) [0 0]))))
+      (testing "should not move cursor on left/right/up/down when mode is :running"
+        (is (= (cursor-after :running :left) [0 0]))
+        (is (= (cursor-after :running :right) [0 0]))
+        (is (= (cursor-after :running :up) [0 0]))
+        (is (= (cursor-after :running :down) [0 0]))))
 
     (testing "should let move board step size depends on cell size"
       (letfn [(center-after [cell-size & keys]
                 (let [ui-state (-> ui-state
                                    (assoc-in [:geometry :cell-size] cell-size)
                                    (assoc :mode :running))]
-                  (get-in (keys-typed ui-state keys) [:geometry :center])))]
-        (is (= (center-after 2 :h) [5 0]))
-        (is (= (center-after 3 :h) [3 0]))
-        (is (= (center-after 4 :h) [2 0]))
-        (is (= (center-after 6 :h) [1 0]))
-        (is (= (center-after 10 :h) [1 0]))
-        (is (= (center-after 11 :h) [1 0]))
-        (is (= (center-after 20 :h) [1 0]))
-        (is (= (center-after 2 :l) [-5 0]))
-        (is (= (center-after 10 :l) [-1 0]))
-        (is (= (center-after 11 :l) [-1 0]))
-        (is (= (center-after 20 :l) [-1 0]))
-        (is (= (center-after 2 :k) [0 -5]))
-        (is (= (center-after 10 :k) [0 -1]))
-        (is (= (center-after 11 :k) [0 -1]))
-        (is (= (center-after 20 :k) [0 -1]))
-        (is (= (center-after 2 :j) [0 5]))
-        (is (= (center-after 10 :j) [0 1]))
-        (is (= (center-after 11 :j) [0 1]))
-        (is (= (center-after 20 :j) [0 1]))))
+                  (get-in (keys-pressed ui-state keys) [:geometry :center])))]
+        (is (= (center-after 2 :left) [5 0]))
+        (is (= (center-after 3 :left) [3 0]))
+        (is (= (center-after 4 :left) [2 0]))
+        (is (= (center-after 6 :left) [1 0]))
+        (is (= (center-after 10 :left) [1 0]))
+        (is (= (center-after 11 :left) [1 0]))
+        (is (= (center-after 20 :left) [1 0]))
+        (is (= (center-after 2 :right) [-5 0]))
+        (is (= (center-after 10 :right) [-1 0]))
+        (is (= (center-after 11 :right) [-1 0]))
+        (is (= (center-after 20 :right) [-1 0]))
+        (is (= (center-after 2 :up) [0 -5]))
+        (is (= (center-after 10 :up) [0 -1]))
+        (is (= (center-after 11 :up) [0 -1]))
+        (is (= (center-after 20 :up) [0 -1]))
+        (is (= (center-after 2 :down) [0 5]))
+        (is (= (center-after 10 :down) [0 1]))
+        (is (= (center-after 11 :down) [0 1]))
+        (is (= (center-after 20 :down) [0 1]))))
 
     (testing "should center board and cursor on 'c'"
       (let [ui-state (-> ui-state
                          (assoc-in [:geometry :center] [2 3])
                          (assoc :cursor [4 5])
-                         (keys-typed [:c]))]
+                         (keys-pressed [:c]))]
         (is (= (get-in ui-state [:geometry :center]) [0 0]))
         (is (= (get ui-state :cursor) [0 0]))))
 
@@ -126,11 +126,11 @@
       (let [board (-> ui-state
                       (assoc :mode :stopped)
                       (assoc :cursor [4 5])
-                      (keys-typed [:space])
+                      (keys-pressed [:space])
                       (assoc :cursor [13 11])
-                      (keys-typed [:space])
+                      (keys-pressed [:space])
                       (assoc :cursor [1 2])
-                      (keys-typed [:space :space])
+                      (keys-pressed [:space :space])
                       (:board))]
         (is (= (board/number-of-on-cells board) 2))
         (is (true? (board/on-cell? board [4 5])))
@@ -140,6 +140,6 @@
       (let [board (-> ui-state
                       (assoc :mode :running)
                       (assoc :cursor [4 5])
-                      (keys-typed [:space])
+                      (keys-pressed [:space])
                       (:board))]
         (is (= (board/number-of-on-cells board) 0))))))

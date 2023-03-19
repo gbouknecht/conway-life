@@ -15,14 +15,14 @@ To start, install [Leiningen](https://leiningen.org) and run `lein run`.
 | `n`      |          | next                                                       |
 | `C`      |          | clear board                                                |
 | `c`      |          | move board origin to center of window and cursor to origin |
-| `h`      | :running | move board left                                            |
-| `h`      | :stopped | move cursor left                                           |
-| `l`      | :running | move board right                                           |
-| `l`      | :stopped | move cursor right                                          |
-| `k`      | :running | move board up                                              |
-| `k`      | :stopped | move cursor up                                             |
-| `j`      | :running | move board down                                            |
-| `j`      | :stopped | move cursor down                                           |
+| `left`   | :running | move board left                                            |
+| `left`   | :stopped | move cursor left                                           |
+| `right`  | :running | move board right                                           |
+| `right`  | :stopped | move cursor right                                          |
+| `up`     | :running | move board up                                              |
+| `up`     | :stopped | move cursor up                                             |
+| `down`   | :running | move board down                                            |
+| `down`   | :stopped | move cursor down                                           |
 
 | Mouse        | Mode         | Description                           |
 |--------------|--------------|---------------------------------------|
