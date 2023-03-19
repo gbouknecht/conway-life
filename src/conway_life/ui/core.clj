@@ -36,7 +36,7 @@
         [window-width window-height] (:window-size geometry)
         cell-size (:cell-size geometry)
         draw-board #(do (q/fill 0)
-                        (doseq [coords (board/all-on-cell-coords board)]
+                        (doseq [coords (board/on-cells board)]
                           (let [[window-x window-y] (geometry/to-window-coords coords geometry)]
                             (if (= cell-size 1)
                               (q/point window-x window-y)

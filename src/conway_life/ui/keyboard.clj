@@ -27,7 +27,7 @@
         key-pressed-in-stopped-mode
         (fn [ui-state]
           (letfn [(toggle-cell-state-at-cursor [ui-state]
-                    (update ui-state :board #(board/toggle-cell-state % (board/make-cell (:cursor ui-state)))))]
+                    (update ui-state :board #(board/toggle-cell-state % (:cursor ui-state))))]
             (cond-> ui-state
                     (match-keys? :left) (update :cursor (fn [[x y]] [(dec x) y]))
                     (match-keys? :right) (update :cursor (fn [[x y]] [(inc x) y]))

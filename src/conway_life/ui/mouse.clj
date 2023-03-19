@@ -6,7 +6,7 @@
   (if (= (:mode ui-state) :stopped)
     (let [[x y] (geometry/to-coords [window-x window-y] (:geometry ui-state))]
       (-> ui-state
-          (update :board #(board/toggle-cell-state % (board/make-cell x y)))
+          (update :board #(board/toggle-cell-state % [x y]))
           (assoc :cursor [x y])))
     ui-state))
 (defn double-clicked [ui-state {window-x :x window-y :y :as event}]

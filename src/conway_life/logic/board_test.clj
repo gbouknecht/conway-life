@@ -27,7 +27,7 @@
       (is (true? (board/on-cell? board [8 1])))
       (is (true? (board/on-cell? board [2 3])))
       (is (true? (board/on-cell? board [6 6])))
-      (is (= (set (board/all-on-cell-coords board)) #{[8 1] [2 3] [6 6]}))))
+      (is (= (set (board/on-cells board)) #{[8 1] [2 3] [6 6]}))))
 
   (testing "should be able to toggle state of cell between 'on' and 'off'"
     (let [board (-> (board/make-board)
@@ -49,7 +49,7 @@
           percentage 75
           board (-> (board/make-board)
                     (board/fill-randomly bounds percentage))
-          [all-xs all-ys] (let [flattened-coords (flatten (board/all-on-cell-coords board))]
+          [all-xs all-ys] (let [flattened-coords (flatten (seq (board/on-cells board)))]
                             [(take-nth 2 flattened-coords) (take-nth 2 (rest flattened-coords))])
           percentage-on-cells (/ (* (board/number-of-on-cells board) 100) (* width height))]
       (is (= (apply min all-xs) x))

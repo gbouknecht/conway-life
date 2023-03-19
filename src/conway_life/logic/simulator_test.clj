@@ -7,7 +7,7 @@
 
 (defn- set-pattern [board [x y] pattern]
   (letfn [(to-int [^Character c] (Character/digit c 10))]
-    (reduce (fn [board [[dx dy] state]] (board/set-cell-state board (board/make-cell (+ x dx) (+ y dy)) state))
+    (reduce (fn [board [[dx dy] state]] (board/set-cell-state board [(+ x dx) (+ y dy)] state))
             board
             (->> pattern
                  (reverse)
@@ -15,7 +15,7 @@
                  (apply concat)))))
 (defn- get-pattern [board [_ _ width _ :as bounds]]
   (->> (board/all-coords bounds)
-       (map #(if (board/on-cell? board (board/make-cell %)) "1" "0"))
+       (map #(if (board/on-cell? board %) "1" "0"))
        (partition width)
        (reverse)
        (mapv str/join)))
