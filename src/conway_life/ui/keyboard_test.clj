@@ -52,7 +52,7 @@
                 (get-in (keys-pressed ui-state keys) [:geometry :center])))
             (cursor-after [mode & keys]
               (let [ui-state (assoc ui-state :mode mode)]
-                (get (keys-pressed ui-state keys) :cursor)))]
+                (get-in (keys-pressed ui-state keys) [:geometry :cursor])))]
 
       (testing "should move board on left/right/up/down when mode is :running"
         (is (= (center-after :running :left) [10 0]))
@@ -117,19 +117,19 @@
     (testing "should center board and cursor on 'c'"
       (let [ui-state (-> ui-state
                          (assoc-in [:geometry :center] [2 3])
-                         (assoc :cursor [4 5])
+                         (assoc-in [:geometry :cursor] [4 5])
                          (keys-pressed [:c]))]
         (is (= (get-in ui-state [:geometry :center]) [0 0]))
-        (is (= (get ui-state :cursor) [0 0]))))
+        (is (= (get-in ui-state [:geometry :cursor]) [0 0]))))
 
     (testing "should toggle cell state at cursor on ' ' when mode is :stopped"
       (let [board (-> ui-state
                       (assoc :mode :stopped)
-                      (assoc :cursor [4 5])
+                      (assoc-in [:geometry :cursor] [4 5])
                       (keys-pressed [:space])
-                      (assoc :cursor [13 11])
+                      (assoc-in [:geometry :cursor] [13 11])
                       (keys-pressed [:space])
-                      (assoc :cursor [1 2])
+                      (assoc-in [:geometry :cursor] [1 2])
                       (keys-pressed [:space :space])
                       (:board))]
         (is (= (board/number-of-on-cells board) 2))
@@ -139,7 +139,7 @@
     (testing "should not toggle cell state at cursor on ' ' when mode is :running"
       (let [board (-> ui-state
                       (assoc :mode :running)
-                      (assoc :cursor [4 5])
+                      (assoc-in [:geometry :cursor] [4 5])
                       (keys-pressed [:space])
                       (:board))]
         (is (= (board/number-of-on-cells board) 0))))))

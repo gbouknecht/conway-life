@@ -2,9 +2,8 @@
   (:require [conway-life.logic.board :as board]))
 
 (defn make-ui-state [fill-size fill-percentage geometry
-                     & {:keys [mode cursor show-raster]
+                     & {:keys [mode show-raster]
                         :or   {mode        :stopped
-                               cursor      [0 0]
                                show-raster false}}]
   (let [[width height] fill-size
         x (- (/ width 2))
@@ -13,5 +12,4 @@
     {:board       (board/fill-randomly (board/make-board) bounds fill-percentage)
      :geometry    geometry
      :mode        mode
-     :cursor      cursor
      :show-raster show-raster}))

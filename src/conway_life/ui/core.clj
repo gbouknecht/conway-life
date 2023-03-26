@@ -31,7 +31,7 @@
 (defn- draw [ui-state]
   (let [board (:board ui-state)
         geometry (:geometry ui-state)
-        [cursor-x cursor-y] (:cursor ui-state)
+        [cursor-x cursor-y] (:cursor geometry)
         [center-x center-y] (:center geometry)
         [window-width window-height] (:window-size geometry)
         cell-size (:cell-size geometry)

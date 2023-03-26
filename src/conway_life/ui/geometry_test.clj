@@ -7,12 +7,17 @@
   (testing "should have defaults"
     (let [geometry (geometry/make-geometry)]
       (is (= (:center geometry) [0 0]))
+      (is (= (:cursor geometry) [0 0]))
       (is (nil? (:window-size geometry)))
       (is (= (:cell-size geometry) 1))))
 
   (testing "should be able to overwrite defaults"
-    (let [geometry (geometry/make-geometry :center [2 3] :window-size [400 500] :cell-size 4)]
+    (let [geometry (geometry/make-geometry :center [2 3]
+                                           :cursor [4 5]
+                                           :window-size [400 500]
+                                           :cell-size 4)]
       (is (= (:center geometry) [2 3]))
+      (is (= (:cursor geometry) [4 5]))
       (is (= (:window-size geometry) [400 500]))
       (is (= (:cell-size geometry) 4))))
 

@@ -31,7 +31,7 @@
       (let [geometry (geometry/make-geometry :center [50 30] :window-size [200 100] :cell-size 3)
             ui-state (-> (ui-state/make-ui-state [0 0] 0 geometry :mode :stopped)
                          (clicked-fn {:x 100 :y 50}))]
-        (is (= (:cursor ui-state) [50 30]))))))
+        (is (= (get-in ui-state [:geometry :cursor]) [50 30]))))))
 
 (deftest about-single-clicked
 

@@ -1,8 +1,11 @@
 (ns conway-life.ui.geometry)
 
-(defn make-geometry [& {:keys [center window-size cell-size]
-                        :or   {center [0 0] cell-size 1}}]
+(defn make-geometry [& {:keys [center cursor window-size cell-size]
+                        :or   {center    [0 0]
+                               cursor    [0 0]
+                               cell-size 1}}]
   {:center      center
+   :cursor      cursor
    :window-size window-size
    :cell-size   cell-size})
 (defn to-window-coords [[x y] geometry]

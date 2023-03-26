@@ -16,7 +16,7 @@
                   (match-keys? :n) (assoc :mode :step)
                   (match-keys? :C) (assoc :board (board/make-board) :mode :stopped)
                   (match-keys? :c) (-> (assoc-in [:geometry :center] [0 0])
-                                       (assoc :cursor [0 0]))))
+                                       (assoc-in [:geometry :cursor] [0 0]))))
         key-pressed-in-running-mode
         (fn [ui-state]
           (cond-> ui-state
@@ -27,12 +27,12 @@
         key-pressed-in-stopped-mode
         (fn [ui-state]
           (letfn [(toggle-cell-state-at-cursor [ui-state]
-                    (update ui-state :board #(board/toggle-cell-state % (:cursor ui-state))))]
+                    (update ui-state :board #(board/toggle-cell-state % (get-in ui-state [:geometry :cursor]))))]
             (cond-> ui-state
-                    (match-keys? :left) (update :cursor (fn [[x y]] [(dec x) y]))
-                    (match-keys? :right) (update :cursor (fn [[x y]] [(inc x) y]))
-                    (match-keys? :up) (update :cursor (fn [[x y]] [x (inc y)]))
-                    (match-keys? :down) (update :cursor (fn [[x y]] [x (dec y)]))
+                    (match-keys? :left) (update-in [:geometry :cursor] (fn [[x y]] [(dec x) y]))
+                    (match-keys? :right) (update-in [:geometry :cursor] (fn [[x y]] [(inc x) y]))
+                    (match-keys? :up) (update-in [:geometry :cursor] (fn [[x y]] [x (inc y)]))
+                    (match-keys? :down) (update-in [:geometry :cursor] (fn [[x y]] [x (dec y)]))
                     (match-keys? :space) (toggle-cell-state-at-cursor))))]
     (cond-> ui-state
             (match-mode? :running) (key-pressed-in-running-mode)
