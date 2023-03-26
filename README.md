@@ -23,12 +23,13 @@ To start, install [Leiningen](https://leiningen.org) and run `lein run`.
 | `up`     | :stopped | move cursor up                                             |
 | `down`   | :running | move board down                                            |
 | `down`   | :stopped | move cursor down                                           |
+| `space`  | :stopped | toggle cell at cursor                                      |
 
-| Mouse        | Mode         | Description                           |
-|--------------|--------------|---------------------------------------|
-| single click | :stopped     | toggle cell and move cursor to cell   |
-| double click | :stopped     | toggle cell and move cursor to cell   |
-| double click | not :stopped | move clicked cell to center of window |
+| Mouse        | Mode     | Description                           |
+|--------------|----------|---------------------------------------|
+| single click | :stopped | toggle cell and move cursor to cell   |
+| double click | :stopped | toggle cell and move cursor to cell   |
+| double click | :running | move clicked cell to center of window |
 
 ## License
 
