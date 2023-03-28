@@ -54,9 +54,9 @@
                          (q/stroke 255 0 0)
                          (q/no-fill)
                          (q/rect window-x window-y (dec cell-size) (dec cell-size))))
-        draw-info #(let [header-height 30]
+        draw-info #(let [margin-top (:margin-top geometry)]
                      (q/stroke 255)
-                     (q/rect 0 0 window-width header-height)
+                     (q/rect 0 0 window-width margin-top)
                      (q/fill 0)
                      (q/text (format "Generation %d, Number of cells %d, Cursor (%d %d), Center (%d, %d), Window size %dx%d, Cell size %dx%d, Mode %s"
                                      (:generation-count board)
@@ -68,7 +68,7 @@
                                      (:mode ui-state))
                              20 20)
                      (q/stroke 0)
-                     (q/line 0 header-height window-width header-height))]
+                     (q/line 0 margin-top window-width margin-top))]
     (q/background 255)
     (doseq [draw-fn [draw-board draw-raster draw-cursor draw-info]]
       (q/push-style) (draw-fn) (q/pop-style))))
