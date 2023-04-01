@@ -23,16 +23,36 @@
               ui-state (ui-state/make-ui-state [width height] percentage geometry)]
           (is (= @saved-fill-randomly-args [@saved-make-board-result bounds percentage]))
           (is (= (:board ui-state) @saved-fill-randomly-result))
+          (is (empty? (:board-stack ui-state)))
           (is (= (:geometry ui-state) geometry))))))
 
   (testing "should have defaults"
     (let [ui-state (ui-state/make-ui-state [500 300] 75 (geometry/make-geometry))]
+      (is (= (:max-board-stack-size ui-state) 500))
       (is (= (:mode ui-state) :stopped))
       (is (false? (:show-raster ui-state)))))
 
   (testing "should be able to overwrite defaults"
     (let [ui-state (ui-state/make-ui-state [500 300] 75 (geometry/make-geometry)
+                                           :max-board-stack-size 175
                                            :mode :step
                                            :show-raster true)]
+      (is (= (:max-board-stack-size ui-state) 175))
       (is (= (:mode ui-state) :step))
-      (is (true? (:show-raster ui-state))))))
+      (is (true? (:show-raster ui-state)))))
+
+  (testing "should be able to push/pop board on stack limited by max-board-stack-size"
+    (let [ui-state-0 (ui-state/make-ui-state [2 2] 0 (geometry/make-geometry) :max-board-stack-size 3)
+          board-1 (board/toggle-cell-state (:board ui-state-0) [0 0])
+          board-2 (board/toggle-cell-state board-1 [1 0])
+          board-3 (board/toggle-cell-state board-2 [0 1])
+          board-4 (board/toggle-cell-state board-3 [1 1])
+          ui-state-1 (-> ui-state-0
+                         ui-state/push-board (assoc :board board-1)
+                         ui-state/push-board (assoc :board board-2)
+                         ui-state/push-board (assoc :board board-3)
+                         ui-state/push-board (assoc :board board-4))]
+      (is (= (-> ui-state-1 ui-state/pop-board :board) board-3))
+      (is (= (-> ui-state-1 ui-state/pop-board ui-state/pop-board :board) board-2))
+      (is (= (-> ui-state-1 ui-state/pop-board ui-state/pop-board ui-state/pop-board :board) board-1))
+      (is (= (-> ui-state-1 ui-state/pop-board ui-state/pop-board ui-state/pop-board ui-state/pop-board :board) board-1)))))
