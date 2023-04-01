@@ -8,7 +8,11 @@
 
 (deftest about-keyboard
 
-  (let [ui-state (ui-state/make-ui-state [0 0] 0 (geometry/make-geometry))
+  (let [ui-state (ui-state/make-ui-state [0 0] 0 (geometry/make-geometry :center [0 0]
+                                                                         :cursor [0 0]
+                                                                         :window-size [100 200]
+                                                                         :cell-size 1
+                                                                         :margin-top 10))
         keys-pressed (fn [ui-state keys] (reduce (fn [ui-state key] (keyboard/key-pressed ui-state {:key key}))
                                                  ui-state keys))]
 
@@ -86,7 +90,17 @@
         (is (= (cursor-after :running :left) [0 0]))
         (is (= (cursor-after :running :right) [0 0]))
         (is (= (cursor-after :running :up) [0 0]))
-        (is (= (cursor-after :running :down) [0 0]))))
+        (is (= (cursor-after :running :down) [0 0])))
+
+      (testing "should adjust center when cursor moves out of view"
+        (is (= (apply center-after :stopped (repeat 50 :left)) [0 0]))
+        (is (= (apply center-after :stopped (repeat 51 :left)) [-1 0]))
+        (is (= (apply center-after :stopped (repeat 49 :right)) [0 0]))
+        (is (= (apply center-after :stopped (repeat 50 :right)) [1 0]))
+        (is (= (apply center-after :stopped (repeat 89 :up)) [0 0]))
+        (is (= (apply center-after :stopped (repeat 90 :up)) [0 1]))
+        (is (= (apply center-after :stopped (repeat 100 :down)) [0 0]))
+        (is (= (apply center-after :stopped (repeat 101 :down)) [0 -1]))))
 
     (testing "should let move board step size depends on cell size"
       (letfn [(center-after [cell-size & keys]

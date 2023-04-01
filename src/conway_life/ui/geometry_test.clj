@@ -82,4 +82,31 @@
       [0 1] [400 500] 3 [200 250] [0 1]
       [1 1] [400 500] 3 [200 250] [1 1]
       [1 1] [400 500] 3 [203 247] [2 2]
-      [-1 -1] [400 500] 3 [200 250] [-1 -1])))
+      [-1 -1] [400 500] 3 [200 250] [-1 -1]))
+
+  (testing "should be able to make cursor visible by adjusting center"
+    (are [center cursor new-center]
+      (let [geometry (geometry/make-geometry :center center
+                                             :cursor cursor
+                                             :window-size [20 40]
+                                             :cell-size 2
+                                             :margin-top 4)]
+        (is (= (geometry/adjust-center-to-make-cursor-visible geometry)
+               (assoc geometry :center new-center))))
+      [0 0] [0 0] [0 0]
+      [2 3] [4 5] [2 3]
+      [0 0] [4 0] [0 0]
+      [0 0] [5 0] [1 0]
+      [0 0] [6 0] [2 0]
+      [0 0] [-5 0] [0 0]
+      [0 0] [-6 0] [-1 0]
+      [0 0] [-7 0] [-2 0]
+      [0 0] [0 7] [0 0]
+      [0 0] [0 8] [0 1]
+      [0 0] [0 9] [0 2]
+      [0 0] [0 -10] [0 0]
+      [0 0] [0 -11] [0 -1]
+      [0 0] [0 -12] [0 -2]
+      [0 0] [5 9] [1 2]
+      [4 0] [9 0] [5 0]
+      [0 4] [0 12] [0 5])))
