@@ -24,7 +24,8 @@
 (defn update-ui-state [ui-state]
   (letfn [(match-mode? [& modes] (contains? (set modes) (:mode ui-state)))]
     (cond-> ui-state
-            (match-mode? :running :step) (update :board simulator/next-generation)
+            (match-mode? :running :step) (-> (ui-state/push-board)
+                                             (update :board simulator/next-generation))
             (match-mode? :step) (assoc :mode :stopped)
             :always (assoc-in [:geometry :window-size] [(q/width) (q/height)])
             :always (input-ui-state/update-time-ms (time-ms)))))

@@ -13,6 +13,7 @@ To start, install [Leiningen](https://leiningen.org) and run `lein run`.
 | `r`      |          | show raster                                                |
 | `s`      |          | start/stop                                                 |
 | `n`      |          | next                                                       |
+| `N`      |          | previous                                                   |
 | `C`      |          | clear board                                                |
 | `c`      |          | move board origin to center of window and cursor to origin |
 | `left`   | :running | move board left                                            |

@@ -1,6 +1,7 @@
 (ns conway-life.ui.keyboard
   (:require [conway-life.logic.board :as board]
-            [conway-life.ui.geometry :as geometry]))
+            [conway-life.ui.geometry :as geometry]
+            [conway-life.ui.ui-state :as ui-state]))
 
 (defn key-pressed [ui-state event]
   (let [match-mode? (fn [mode] (= (:mode ui-state) mode))
@@ -15,7 +16,9 @@
                   (match-keys? :r) (update :show-raster not)
                   (match-keys? :s) (update :mode #(if (= % :running) :stopped :running))
                   (match-keys? :n) (assoc :mode :step)
-                  (match-keys? :C) (assoc :board (board/make-board) :mode :stopped)
+                  (match-keys? :N) (-> (ui-state/pop-board)
+                                       (assoc :mode :stopped))
+                  (match-keys? :C) (ui-state/clear)
                   (match-keys? :c) (-> (assoc-in [:geometry :center] [0 0])
                                        (assoc-in [:geometry :cursor] [0 0]))))
         key-pressed-in-running-mode

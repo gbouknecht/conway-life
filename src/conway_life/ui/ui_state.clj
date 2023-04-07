@@ -16,6 +16,13 @@
      :geometry             geometry
      :mode                 mode
      :show-raster          show-raster}))
+(defn clear [ui-state]
+  (-> ui-state
+      (assoc :board (board/make-board))
+      (assoc :board-stack [])
+      (assoc-in [:geometry :center] [0 0])
+      (assoc-in [:geometry :cursor] [0 0])
+      (assoc :mode :stopped)))
 (defn push-board [ui-state]
   (-> ui-state
       (update :board-stack conj (:board ui-state))

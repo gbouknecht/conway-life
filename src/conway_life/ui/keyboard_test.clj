@@ -40,16 +40,31 @@
         (is (= (mode-after :n :n) :step))
         (is (= (mode-after :n :s) :running))))
 
+    (testing "should step back on 'N'"
+      (let [board-1 (board/toggle-cell-state (:board ui-state) [0 0])
+            board-2 (board/toggle-cell-state board-1 [1 0])
+            board-3 (board/toggle-cell-state board-2 [0 1])
+            board-4 (board/toggle-cell-state board-3 [1 1])
+            ui-state (-> ui-state
+                         ui-state/push-board (assoc :board board-1)
+                         ui-state/push-board (assoc :board board-2)
+                         ui-state/push-board (assoc :board board-3)
+                         ui-state/push-board (assoc :board board-4))]
+        (is (= (:board (keys-pressed ui-state [:N])) board-3))
+        (is (= (:mode (keys-pressed ui-state [:N])) :stopped))
+        (is (= (:board (keys-pressed ui-state [:N :N])) board-2))
+        (is (= (:board (keys-pressed ui-state [:N :N :N])) board-1))))
+
     (testing "should clear board on 'C'"
       (let [ui-state (-> ui-state
                          (update :board #(board/fill-randomly % [10 20 50 30] 75))
                          (update :board simulator/next-generation)
                          (update :board simulator/next-generation))]
-        (is (= 2 (get-in ui-state [:board :generation-count])))
-        (is (< 0 (board/number-of-on-cells (:board ui-state))))
+        (is (= (get-in ui-state [:board :generation-count]) 2))
+        (is (> (board/number-of-on-cells (:board ui-state)) 0))
         (let [ui-state (keys-pressed ui-state [:C])]
-          (is (= 0 (get-in ui-state [:board :generation-count])))
-          (is (= 0 (board/number-of-on-cells (:board ui-state)))))))
+          (is (= (get-in ui-state [:board :generation-count]) 0))
+          (is (= (board/number-of-on-cells (:board ui-state)) 0)))))
 
     (letfn [(center-after [mode & keys]
               (let [ui-state (assoc ui-state :mode mode)]
