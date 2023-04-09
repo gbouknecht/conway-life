@@ -1,5 +1,6 @@
 (ns conway-life.ui.core-test
   (:require [clojure.test :refer :all]
+            [conway-life.ui.common :refer [time-ms]]
             [conway-life.ui.core :as core]
             [conway-life.ui.geometry :as geometry]
             [conway-life.ui.input-ui-state :as input-ui-state]
@@ -35,6 +36,6 @@
         (is (= (get-in (core/update-ui-state ui-state) [:geometry :window-size]) [window-width window-height])))
 
       (testing "should update time"
-        (with-redefs [core/time-ms (constantly 13)]
+        (with-redefs [time-ms (constantly 13)]
           (let [next-ui-state (core/update-ui-state ui-state)]
             (is (= (:time-ms next-ui-state) 13))))))))

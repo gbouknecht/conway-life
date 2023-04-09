@@ -14,15 +14,15 @@ To start, install [Leiningen](https://leiningen.org) and run `lein run`.
 | `s`      |          | start/stop                                                 |
 | `n`      |          | next                                                       |
 | `N`      |          | previous                                                   |
-| `C`      |          | clear board                                                |
+| `C`      |          | clear                                                      |
 | `c`      |          | move board origin to center of window and cursor to origin |
 | `left`   | :running | move board left                                            |
-| `left`   | :stopped | move cursor left                                           |
 | `right`  | :running | move board right                                           |
-| `right`  | :stopped | move cursor right                                          |
 | `up`     | :running | move board up                                              |
-| `up`     | :stopped | move cursor up                                             |
 | `down`   | :running | move board down                                            |
+| `left`   | :stopped | move cursor left                                           |
+| `right`  | :stopped | move cursor right                                          |
+| `up`     | :stopped | move cursor up                                             |
 | `down`   | :stopped | move cursor down                                           |
 | `space`  | :stopped | toggle cell at cursor                                      |
 

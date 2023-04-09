@@ -1,6 +1,7 @@
 (ns conway-life.ui.core
   (:require [conway-life.logic.board :as board]
-            [conway-life.logic.simulator :as simulator]
+            [conway-life.ui.actions :as actions]
+            [conway-life.ui.common :refer [time-ms]]
             [conway-life.ui.geometry :as geometry]
             [conway-life.ui.input-ui-state :as input-ui-state]
             [conway-life.ui.keyboard :as keyboard]
@@ -9,7 +10,6 @@
             [quil.core :as q]
             [quil.middleware :as m]))
 
-(defn time-ms [] (System/currentTimeMillis))
 (defn- setup []
   (let [window-size [(q/width) (q/height)]
         cell-size 2
@@ -24,11 +24,10 @@
 (defn update-ui-state [ui-state]
   (letfn [(match-mode? [& modes] (contains? (set modes) (:mode ui-state)))]
     (cond-> ui-state
-            (match-mode? :running :step) (-> (ui-state/push-board)
-                                             (update :board simulator/next-generation))
-            (match-mode? :step) (assoc :mode :stopped)
-            :always (assoc-in [:geometry :window-size] [(q/width) (q/height)])
-            :always (input-ui-state/update-time-ms (time-ms)))))
+            (match-mode? :running :step) (actions/dispatch :next)
+            (match-mode? :step) (actions/dispatch :stop)
+            :always (actions/dispatch :set-window-size [(q/width) (q/height)])
+            :always (actions/dispatch :update-time))))
 (defn- draw [ui-state]
   (let [board (:board ui-state)
         geometry (:geometry ui-state)
