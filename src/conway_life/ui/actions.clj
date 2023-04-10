@@ -74,3 +74,12 @@
 
 (defmethod dispatch :toggle-cell-state-at-cursor [ui-state _]
   (update ui-state :board #(board/toggle-cell-state % (get-in ui-state [:geometry :cursor]))))
+(defmethod dispatch :fill-board-randomly [ui-state _]
+  (let [geometry (:geometry ui-state)
+        [center-x center-y] (:center geometry)
+        [width height] (mapv #(quot % (:cell-size geometry)) (:window-size geometry))
+        x (- center-x (/ width 2))
+        y (- center-y (/ height 2))
+        bounds [x y width height]
+        percentage 15]
+    (update ui-state :board #(board/fill-randomly % bounds percentage))))

@@ -5,32 +5,33 @@ in [Clojure](https://clojure.org).
 
 To start, install [Leiningen](https://leiningen.org) and run `lein run`.
 
-| Key      | Mode     | Description                                                |
-|----------|----------|------------------------------------------------------------|
-| `-`      |          | zoom out                                                   |
-| `=`, `+` |          | zoom in                                                    |
-| `0`      |          | set zoom to 1 pixel per cel                                |
-| `r`      |          | show raster                                                |
-| `s`      |          | start/stop                                                 |
-| `n`      |          | next                                                       |
-| `N`      |          | previous                                                   |
-| `C`      |          | clear                                                      |
-| `c`      |          | move board origin to center of window and cursor to origin |
-| `left`   | :running | move board left                                            |
-| `right`  | :running | move board right                                           |
-| `up`     | :running | move board up                                              |
-| `down`   | :running | move board down                                            |
-| `left`   | :stopped | move cursor left                                           |
-| `right`  | :stopped | move cursor right                                          |
-| `up`     | :stopped | move cursor up                                             |
-| `down`   | :stopped | move cursor down                                           |
-| `space`  | :stopped | toggle cell at cursor                                      |
+| Key      | Mode       | Description                                                |
+|----------|------------|------------------------------------------------------------|
+| `-`      |            | zoom out                                                   |
+| `=`, `+` |            | zoom in                                                    |
+| `0`      |            | set zoom to 1 pixel per cel                                |
+| `r`      |            | show raster                                                |
+| `s`      |            | start/stop                                                 |
+| `n`      |            | next                                                       |
+| `N`      |            | previous                                                   |
+| `C`      |            | clear                                                      |
+| `c`      |            | move board origin to center of window and cursor to origin |
+| `left`   | `:running` | move board left                                            |
+| `right`  | `:running` | move board right                                           |
+| `up`     | `:running` | move board up                                              |
+| `down`   | `:running` | move board down                                            |
+| `left`   | `:stopped` | move cursor left                                           |
+| `right`  | `:stopped` | move cursor right                                          |
+| `up`     | `:stopped` | move cursor up                                             |
+| `down`   | `:stopped` | move cursor down                                           |
+| `space`  | `:stopped` | toggle cell at cursor                                      |
+| `R`      | `:stopped` | fill board randomly bounded by window                      |
 
-| Mouse        | Mode     | Description                         |
-|--------------|----------|-------------------------------------|
-| single click | :stopped | move cursor to cell                 |
-| double click | :stopped | toggle cell and move cursor to cell |
-| double click | :running | move cell to center of window       |
+| Mouse        | Mode       | Description                         |
+|--------------|------------|-------------------------------------|
+| single click | `:stopped` | move cursor to cell                 |
+| double click | `:stopped` | toggle cell and move cursor to cell |
+| double click | `:running` | move cell to center of window       |
 
 ## License
 

@@ -12,8 +12,8 @@
 
 (defn- setup []
   (let [geometry (geometry/make-geometry :window-size [(q/width) (q/height)]
-                                         :cell-size 2)]
-    (merge (ui-state/make-ui-state geometry :mode :stopped)
+                                         :cell-size 10)]
+    (merge (ui-state/make-ui-state geometry :mode :stopped :show-raster true)
            (input-ui-state/make-input-ui-state :time-ms (time-ms)
                                                :single-clicked mouse/single-clicked
                                                :double-clicked mouse/double-clicked))))
@@ -45,7 +45,7 @@
                              (q/line 0 window-y window-width window-y))))
         draw-cursor #(if (= (:mode ui-state) :stopped)
                        (let [[window-x window-y] (geometry/to-window-coords [cursor-x cursor-y] geometry)
-                             weight (condp < cell-size 25 4 15 3 10 2 1)]
+                             weight (condp < cell-size 25 4 15 3 5 2 1)]
                          (q/stroke-weight weight)
                          (q/stroke 255 0 0)
                          (q/no-fill)

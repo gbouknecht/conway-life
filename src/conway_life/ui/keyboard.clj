@@ -30,7 +30,8 @@
                   (match-keys? :right) (actions/dispatch :move-cursor-right)
                   (match-keys? :up) (actions/dispatch :move-cursor-up)
                   (match-keys? :down) (actions/dispatch :move-cursor-down)
-                  (match-keys? :space) (actions/dispatch :toggle-cell-state-at-cursor)))]
+                  (match-keys? :space) (actions/dispatch :toggle-cell-state-at-cursor)
+                  (match-keys? :R) (actions/dispatch :fill-board-randomly)))]
     (cond-> ui-state
             (match-mode? :running) (key-pressed-in-running-mode)
             (match-mode? :stopped) (key-pressed-in-stopped-mode)

@@ -171,4 +171,30 @@
                       (assoc-in [:geometry :cursor] [4 5])
                       (keys-pressed [:space])
                       (:board))]
+        (is (= (board/number-of-on-cells board) 0))))
+
+    (testing "should fill board randomly bounded by window on 'R' when mode is :stopped"
+      (let [fill-randomly board/fill-randomly
+            saved-fill-randomly-args (atom nil)
+            saved-fill-randomly-result (atom nil)]
+        (with-redefs [board/fill-randomly (fn [& args]
+                                            (reset! saved-fill-randomly-args args)
+                                            (reset! saved-fill-randomly-result (apply fill-randomly args)))]
+          (let [board (:board ui-state)
+                filled-board (-> ui-state
+                                 (assoc-in [:geometry :center] [20 30])
+                                 (assoc-in [:geometry :window-size] [100 200])
+                                 (assoc :mode :stopped)
+                                 (keys-pressed [:R])
+                                 (:board))
+                bounds [-30 -70 100 200]
+                percentage 15]
+            (is (= @saved-fill-randomly-args [board bounds percentage]))
+            (is (= filled-board @saved-fill-randomly-result))))))
+
+    (testing "should not fill board randomly on 'R' when mode is :running"
+      (let [board (-> ui-state
+                      (assoc :mode :running)
+                      (keys-pressed [:R])
+                      (:board))]
         (is (= (board/number-of-on-cells board) 0))))))
