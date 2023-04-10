@@ -11,13 +11,9 @@
             [quil.middleware :as m]))
 
 (defn- setup []
-  (let [window-size [(q/width) (q/height)]
-        cell-size 2
-        fill-size (mapv #(quot % cell-size) window-size)
-        fill-percentage 15
-        geometry (geometry/make-geometry :window-size window-size
-                                         :cell-size cell-size)]
-    (merge (ui-state/make-ui-state fill-size fill-percentage geometry :mode :running)
+  (let [geometry (geometry/make-geometry :window-size [(q/width) (q/height)]
+                                         :cell-size 2)]
+    (merge (ui-state/make-ui-state geometry :mode :stopped)
            (input-ui-state/make-input-ui-state :time-ms (time-ms)
                                                :single-clicked mouse/single-clicked
                                                :double-clicked mouse/double-clicked))))

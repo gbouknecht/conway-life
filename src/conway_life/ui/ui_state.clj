@@ -1,21 +1,17 @@
 (ns conway-life.ui.ui-state
   (:require [conway-life.logic.board :as board]))
 
-(defn make-ui-state [fill-size fill-percentage geometry
+(defn make-ui-state [geometry
                      & {:keys [max-board-stack-size mode show-raster]
                         :or   {max-board-stack-size 500
                                mode                 :stopped
                                show-raster          false}}]
-  (let [[width height] fill-size
-        x (- (/ width 2))
-        y (- (/ height 2))
-        bounds [x y width height]]
-    {:board                (board/fill-randomly (board/make-board) bounds fill-percentage)
-     :board-stack          []
-     :max-board-stack-size max-board-stack-size
-     :geometry             geometry
-     :mode                 mode
-     :show-raster          show-raster}))
+  {:board                (board/make-board)
+   :board-stack          []
+   :max-board-stack-size max-board-stack-size
+   :geometry             geometry
+   :mode                 mode
+   :show-raster          show-raster})
 (defn clear [ui-state]
   (-> ui-state
       (assoc :board (board/make-board))

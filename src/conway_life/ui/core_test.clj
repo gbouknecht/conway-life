@@ -9,7 +9,7 @@
 
 (deftest about-update-ui-state
 
-  (let [ui-state (ui-state/make-ui-state [0 0] 0 (geometry/make-geometry))
+  (let [ui-state (ui-state/make-ui-state (geometry/make-geometry))
         window-width 500
         window-height 600]
     (with-redefs [q/width (constantly window-width)

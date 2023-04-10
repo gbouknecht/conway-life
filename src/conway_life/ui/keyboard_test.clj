@@ -8,11 +8,11 @@
 
 (deftest about-keyboard
 
-  (let [ui-state (ui-state/make-ui-state [0 0] 0 (geometry/make-geometry :center [0 0]
-                                                                         :cursor [0 0]
-                                                                         :window-size [100 200]
-                                                                         :cell-size 1
-                                                                         :margin-top 10))
+  (let [ui-state (ui-state/make-ui-state (geometry/make-geometry :center [0 0]
+                                                                 :cursor [0 0]
+                                                                 :window-size [100 200]
+                                                                 :cell-size 1
+                                                                 :margin-top 10))
         keys-pressed (fn [ui-state keys] (reduce (fn [ui-state key] (keyboard/key-pressed ui-state {:key key}))
                                                  ui-state keys))]
 

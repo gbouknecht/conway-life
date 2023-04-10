@@ -9,7 +9,7 @@
 (deftest about-single-clicked
 
   (let [geometry (geometry/make-geometry :center [50 30] :cursor [40 20] :window-size [200 100] :cell-size 3)
-        ui-state (ui-state/make-ui-state [0 0] 0 geometry)]
+        ui-state (ui-state/make-ui-state geometry)]
 
     (testing "should move cursor to cell when mode is :stopped"
       (let [ui-state (assoc ui-state :mode :stopped)]
@@ -22,7 +22,7 @@
 (deftest about-double-clicked
 
   (let [geometry (geometry/make-geometry :center [50 30] :cursor [40 20] :window-size [200 100] :cell-size 3)
-        ui-state (ui-state/make-ui-state [0 0] 0 geometry)]
+        ui-state (ui-state/make-ui-state geometry)]
 
     (testing "should toggle cell state when mode is :stopped"
       (let [ui-state (assoc ui-state :mode :stopped)
