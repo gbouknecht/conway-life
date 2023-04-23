@@ -13,7 +13,6 @@ To start, install [Leiningen](https://leiningen.org) and run `lein run`.
 | `r`      |            | show raster                                                |
 | `s`      |            | start/stop                                                 |
 | `n`      |            | next                                                       |
-| `N`      |            | previous                                                   |
 | `C`      |            | clear                                                      |
 | `c`      |            | move board origin to center of window and cursor to origin |
 | `left`   | `:running` | move board left                                            |
@@ -26,6 +25,8 @@ To start, install [Leiningen](https://leiningen.org) and run `lein run`.
 | `down`   | `:stopped` | move cursor down                                           |
 | `space`  | `:stopped` | toggle cell at cursor                                      |
 | `R`      | `:stopped` | fill board randomly bounded by window                      |
+| `u`      | `:stopped` | undo                                                       |
+| `U`      | `:stopped` | redo                                                       |
 
 | Mouse        | Mode       | Description                         |
 |--------------|------------|-------------------------------------|

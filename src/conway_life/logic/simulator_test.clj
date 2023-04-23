@@ -113,7 +113,7 @@
                         "001100"
                         "000000"]]))))
 
-  (testing "should generate a traffic light when has a T tetromino"
+  (testing "should generate a traffic light when board has a T tetromino"
     (let [patterns (take-patterns 11
                                   (-> (board/make-board)
                                       (set-pattern [-1 -1]

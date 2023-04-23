@@ -13,7 +13,6 @@
                   (match-keys? :r) (actions/dispatch :show-raster)
                   (match-keys? :s) (actions/dispatch :start-stop)
                   (match-keys? :n) (actions/dispatch :step)
-                  (match-keys? :N) (actions/dispatch :previous)
                   (match-keys? :C) (actions/dispatch :clear)
                   (match-keys? :c) (actions/dispatch :move-to-origin)))
         key-pressed-in-running-mode
@@ -31,7 +30,9 @@
                   (match-keys? :up) (actions/dispatch :move-cursor-up)
                   (match-keys? :down) (actions/dispatch :move-cursor-down)
                   (match-keys? :space) (actions/dispatch :toggle-cell-state-at-cursor)
-                  (match-keys? :R) (actions/dispatch :fill-board-randomly)))]
+                  (match-keys? :R) (actions/dispatch :fill-board-randomly)
+                  (match-keys? :u) (actions/dispatch :undo)
+                  (match-keys? :U) (actions/dispatch :redo)))]
     (cond-> ui-state
             (match-mode? :running) (key-pressed-in-running-mode)
             (match-mode? :stopped) (key-pressed-in-stopped-mode)

@@ -18,7 +18,6 @@
 
       (testing "should go to next generation when mode is :running"
         (let [next-ui-state (core/update-ui-state (assoc ui-state :mode :running))]
-          (is (= (-> next-ui-state ui-state/pop-board :board) (:board ui-state)))
           (is (= (get-in next-ui-state [:board :generation-count]) 1))
           (is (= (get-in next-ui-state [:mode]) :running))))
 
