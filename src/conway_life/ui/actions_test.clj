@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [conway-life.logic.board :as board]
             [conway-life.ui.actions :as actions]
+            [conway-life.ui.common :refer [timed-call]]
             [conway-life.ui.geometry :as geometry]
             [conway-life.ui.input-ui-state :as input-ui-state]
             [conway-life.ui.ui-state :as ui-state]))
@@ -60,7 +61,75 @@
     (check (actions/dispatch ui-state :toggle-cell-state [35 45]) (make-action :toggle-cell-state [35 45]))
     (check (actions/dispatch ui-state :toggle-cell-state-at-cursor) (make-action :toggle-cell-state [30 40]))
     (let [ui-state (actions/dispatch ui-state :fill-board-randomly)]
-      (check ui-state (make-action :restore-board (:board ui-state))))
+      (check ui-state (make-action :restore-randomly-filled-board (:board ui-state))))
 
     (let [board (board/toggle-cell-state (:board ui-state) [0 0])]
       (check (actions/dispatch ui-state :restore-board board) (make-action :restore-board board)))))
+
+(deftest about-storing-board-after-long-during-actions
+
+  (testing "should store board when redoable actions applied to latest stored board take more than 200 ms"
+    (let [duration-result-ms (atom nil)
+          with-duration (fn [duration-ms action-fn] (do (reset! duration-result-ms duration-ms) (action-fn)))
+          stack (fn [xs] (reduce #(conj %1 %2) nil xs))]
+      (with-redefs [timed-call (fn [action-fn] [(action-fn) @duration-result-ms])]
+        (let [ui-state-0 (with-duration 150 #(actions/dispatch ui-state :toggle-cell-state [0 0]))
+              ui-state-1 (with-duration 50 #(actions/dispatch ui-state-0 :toggle-cell-state [1 0]))
+              ui-state-2 (with-duration 1 #(actions/dispatch ui-state-1 :toggle-cell-state [2 0]))
+              ui-state-3 (with-duration 150 #(actions/dispatch ui-state-2 :toggle-cell-state [3 0]))
+              ui-state-4 (with-duration 50 #(actions/dispatch ui-state-3 :toggle-cell-state [4 0]))
+              ui-state-5 (with-duration 1 #(actions/dispatch ui-state-4 :toggle-cell-state [5 0]))
+              ui-state-6 (reduce #(actions/dispatch %1 %2) ui-state-5 [:undo :undo :undo])
+              ui-state-7 (with-duration 200 #(actions/dispatch ui-state-6 :toggle-cell-state [7 0]))
+              ui-state-8 (with-duration 1 #(actions/dispatch ui-state-7 :toggle-cell-state [8 0]))]
+          (is (= (:redoable-actions ui-state-0) (stack [(make-action :restore-board (:board ui-state))
+                                                        (make-action :toggle-cell-state [0 0])])))
+          (is (= (:redoable-actions ui-state-1) (stack [(make-action :restore-board (:board ui-state))
+                                                        (make-action :toggle-cell-state [0 0])
+                                                        (make-action :toggle-cell-state [1 0])])))
+          (is (= (:redoable-actions ui-state-2) (stack [(make-action :restore-board (:board ui-state))
+                                                        (make-action :toggle-cell-state [0 0])
+                                                        (make-action :toggle-cell-state [1 0])
+                                                        (make-action :toggle-cell-state [2 0])
+                                                        (make-action :restore-board (:board ui-state-2))])))
+          (is (= (:redoable-actions ui-state-3) (stack [(make-action :restore-board (:board ui-state))
+                                                        (make-action :toggle-cell-state [0 0])
+                                                        (make-action :toggle-cell-state [1 0])
+                                                        (make-action :toggle-cell-state [2 0])
+                                                        (make-action :restore-board (:board ui-state-2))
+                                                        (make-action :toggle-cell-state [3 0])])))
+          (is (= (:redoable-actions ui-state-4) (stack [(make-action :restore-board (:board ui-state))
+                                                        (make-action :toggle-cell-state [0 0])
+                                                        (make-action :toggle-cell-state [1 0])
+                                                        (make-action :toggle-cell-state [2 0])
+                                                        (make-action :restore-board (:board ui-state-2))
+                                                        (make-action :toggle-cell-state [3 0])
+                                                        (make-action :toggle-cell-state [4 0])])))
+          (is (= (:redoable-actions ui-state-5) (stack [(make-action :restore-board (:board ui-state))
+                                                        (make-action :toggle-cell-state [0 0])
+                                                        (make-action :toggle-cell-state [1 0])
+                                                        (make-action :toggle-cell-state [2 0])
+                                                        (make-action :restore-board (:board ui-state-2))
+                                                        (make-action :toggle-cell-state [3 0])
+                                                        (make-action :toggle-cell-state [4 0])
+                                                        (make-action :toggle-cell-state [5 0])
+                                                        (make-action :restore-board (:board ui-state-5))])))
+          (is (= (:redoable-actions ui-state-6) (stack [(make-action :restore-board (:board ui-state))
+                                                        (make-action :toggle-cell-state [0 0])
+                                                        (make-action :toggle-cell-state [1 0])
+                                                        (make-action :toggle-cell-state [2 0])
+                                                        (make-action :restore-board (:board ui-state-2))])))
+          (is (= (:redoable-actions ui-state-7) (stack [(make-action :restore-board (:board ui-state))
+                                                        (make-action :toggle-cell-state [0 0])
+                                                        (make-action :toggle-cell-state [1 0])
+                                                        (make-action :toggle-cell-state [2 0])
+                                                        (make-action :restore-board (:board ui-state-2))
+                                                        (make-action :toggle-cell-state [7 0])])))
+          (is (= (:redoable-actions ui-state-8) (stack [(make-action :restore-board (:board ui-state))
+                                                        (make-action :toggle-cell-state [0 0])
+                                                        (make-action :toggle-cell-state [1 0])
+                                                        (make-action :toggle-cell-state [2 0])
+                                                        (make-action :restore-board (:board ui-state-2))
+                                                        (make-action :toggle-cell-state [7 0])
+                                                        (make-action :toggle-cell-state [8 0])
+                                                        (make-action :restore-board (:board ui-state-8))]))))))))
