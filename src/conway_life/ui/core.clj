@@ -74,7 +74,7 @@
   (q/defsketch
     conway-life
     :title "Conway's Game of Life"
-    :size [(/ (q/screen-width) 2) (/ (q/screen-height) 2)]
+    :size [(quot (q/screen-width) 2) (quot (q/screen-height) 2)]
     :features [:resizable]
     :setup setup
     :update update-ui-state

@@ -167,11 +167,11 @@
         (let [board (:board ui-state)
               filled-board (-> ui-state
                                (assoc-in [:geometry :center] [20 30])
-                               (assoc-in [:geometry :window-size] [100 200])
+                               (assoc-in [:geometry :window-size] [101 201])
                                (assoc :mode :stopped)
                                (keys-pressed [:R])
                                (:board))
-              bounds [-30 -70 100 200]
+              bounds [-30 -70 101 201]
               percentage 15]
           (is (= @saved-fill-randomly-args [board bounds percentage]))
           (is (= filled-board @saved-fill-randomly-result))))))

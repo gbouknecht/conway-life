@@ -110,8 +110,8 @@
   (let [geometry (:geometry ui-state)
         [center-x center-y] (:center geometry)
         [width height] (mapv #(quot % (:cell-size geometry)) (:window-size geometry))
-        x (- center-x (/ width 2))
-        y (- center-y (/ height 2))
+        x (- center-x (quot width 2))
+        y (- center-y (quot height 2))
         bounds [x y width height]
         percentage 15]
     (dispatch ui-state :restore-randomly-filled-board (board/fill-randomly (:board ui-state) bounds percentage))))
