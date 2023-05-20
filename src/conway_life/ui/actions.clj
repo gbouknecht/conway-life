@@ -4,7 +4,8 @@
             [conway-life.ui.common :refer [time-ms timed-call]]
             [conway-life.ui.geometry :as geometry]
             [conway-life.ui.input-ui-state :as input-ui-state]
-            [conway-life.ui.ui-state :as ui-state]))
+            [conway-life.ui.ui-state :as ui-state])
+  (:import (java.time LocalDateTime)))
 
 (def ^:private total-duration-threshold-ms 200)
 
@@ -147,3 +148,19 @@
       (-> ui-state
           (update :redo-actions pop)
           (dispatch-action redo-action)))))
+
+(defmethod dispatch-action :print-statistics [ui-state _]
+  (let [board (:board ui-state)
+        header (format "--- Conway's Game of Life statistics (%s) ---" (LocalDateTime/now))
+        footer (apply str (repeat (count header) "-"))
+        stored-boards (filter #(= (:type %) :restore-board) (:redoable-actions ui-state))]
+    (println header)
+    (println (format "Generation                       : %d" (:generation-count board)))
+    (println (format "Number of cells                  : %d" (board/number-of-on-cells board)))
+    (println (format "Number of redoable actions       : %d" (count (:redoable-actions ui-state))))
+    (println (format "Number of redo actions           : %d" (count (:redo-actions ui-state))))
+    (println (format "Number of stored boards          : %d" (count stored-boards)))
+    (println (format "Number of stored cells           : %d" (->> stored-boards (map (comp board/number-of-on-cells :payload)) (reduce +))))
+    (println (format "Duration from latest stored board: %d ms" (:total-duration-ms ui-state)))
+    (println footer)
+    ui-state))

@@ -27,11 +27,12 @@ To start, install [Leiningen](https://leiningen.org) and run `lein run`.
 | `R`      | `:stopped` | fill board randomly bounded by window                      |
 | `u`      | `:stopped` | undo                                                       |
 | `U`      | `:stopped` | redo                                                       |
+| `p`      |            | print statistics                                           |
 
 | Mouse        | Mode       | Description                         |
 |--------------|------------|-------------------------------------|
 | single click | `:stopped` | move cursor to cell                 |
-| double click | `:stopped` | toggle cell and move cursor to cell |
+| double click | `:stopped` | move cursor to cell and toggle cell |
 | double click | `:running` | move cell to center of window       |
 
 ## License

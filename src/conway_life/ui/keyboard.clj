@@ -14,7 +14,8 @@
                   (match-keys? :s) (actions/dispatch :start-stop)
                   (match-keys? :n) (actions/dispatch :step)
                   (match-keys? :C) (actions/dispatch :clear)
-                  (match-keys? :c) (actions/dispatch :move-to-origin)))
+                  (match-keys? :c) (actions/dispatch :move-to-origin)
+                  (match-keys? :p) (actions/dispatch :print-statistics)))
         key-pressed-in-running-mode
         (fn [ui-state]
           (cond-> ui-state
