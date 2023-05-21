@@ -69,10 +69,10 @@
 (deftest about-storing-board-after-long-during-actions
 
   (testing "should store board when redoable actions applied to latest stored board take more than 200 ms"
-    (let [duration-result-ms (atom nil)
-          with-duration (fn [duration-ms action-fn] (do (reset! duration-result-ms duration-ms) (action-fn)))
+    (let [duration-result-ns (atom nil)
+          with-duration (fn [duration-ms action-fn] (do (reset! duration-result-ns (* duration-ms 1000000)) (action-fn)))
           stack (fn [xs] (reduce #(conj %1 %2) nil xs))]
-      (with-redefs [timed-call (fn [action-fn] [(action-fn) @duration-result-ms])]
+      (with-redefs [timed-call (fn [action-fn] [(action-fn) @duration-result-ns])]
         (let [ui-state-0 (with-duration 150 #(actions/dispatch ui-state :toggle-cell-state [0 0]))
               ui-state-1 (with-duration 50 #(actions/dispatch ui-state-0 :toggle-cell-state [1 0]))
               ui-state-2 (with-duration 1 #(actions/dispatch ui-state-1 :toggle-cell-state [2 0]))

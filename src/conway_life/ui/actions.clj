@@ -7,7 +7,7 @@
             [conway-life.ui.ui-state :as ui-state])
   (:import (java.time LocalDateTime)))
 
-(def ^:private total-duration-threshold-ms 200)
+(def ^:private total-duration-threshold-ns 200000000)
 
 (defn- push-redoable-actions [ui-state action]
   (cond-> ui-state
@@ -19,15 +19,15 @@
       (push-redoable-actions {:type    :restore-board
                               :payload (:board ui-state)
                               :redo    true})
-      (assoc :total-duration-ms 0)))
+      (assoc :total-duration-ns 0)))
 
 (defn call-and-push [action-fn redoable-action]
-  (let [[ui-state duration-ms] (timed-call action-fn)
-        total-duration-ms (+ (:total-duration-ms ui-state) duration-ms)]
+  (let [[ui-state duration-ns] (timed-call action-fn)
+        total-duration-ns (+ (:total-duration-ns ui-state) duration-ns)]
     (cond-> ui-state
-            :always (assoc :total-duration-ms total-duration-ms)
+            :always (assoc :total-duration-ns total-duration-ns)
             :always (push-redoable-actions redoable-action)
-            (> total-duration-ms total-duration-threshold-ms) (store-board))))
+            (> total-duration-ns total-duration-threshold-ns) (store-board))))
 
 (defmulti dispatch-action (fn ([_ action] (:type action))))
 
@@ -161,6 +161,6 @@
     (println (format "Number of redo actions           : %d" (count (:redo-actions ui-state))))
     (println (format "Number of stored boards          : %d" (count stored-boards)))
     (println (format "Number of stored cells           : %d" (->> stored-boards (map (comp board/number-of-on-cells :payload)) (reduce +))))
-    (println (format "Duration from latest stored board: %d ms" (:total-duration-ms ui-state)))
+    (println (format "Duration from latest stored board: %d ns" (:total-duration-ns ui-state)))
     (println footer)
     ui-state))
