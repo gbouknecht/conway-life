@@ -16,14 +16,17 @@
   (testing "should have defaults"
     (let [ui-state (ui-state/make-ui-state (geometry/make-geometry))]
       (is (= (:mode ui-state) :stopped))
-      (is (false? (:show-raster ui-state)))))
+      (is (false? (:show-raster ui-state)))
+      (is (= (:max-number-of-stored-cells ui-state) 50000000))))
 
   (testing "should be able to overwrite defaults"
     (let [ui-state (ui-state/make-ui-state (geometry/make-geometry)
                                            :mode :step
-                                           :show-raster true)]
+                                           :show-raster true
+                                           :max-number-of-stored-cells 1000000)]
       (is (= (:mode ui-state) :step))
-      (is (true? (:show-raster ui-state)))))
+      (is (true? (:show-raster ui-state)))
+      (is (= (:max-number-of-stored-cells ui-state) 1000000))))
 
   (testing "should be able to clear state"
     (let [ui-state (-> (ui-state/make-ui-state (geometry/make-geometry :center [10 20]

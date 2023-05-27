@@ -12,13 +12,30 @@
 (defn- push-redoable-actions [ui-state action]
   (cond-> ui-state
           (not (:redo action)) (update :redo-actions empty)
-          :always (update :redoable-actions conj (assoc action :redo true))))
+          :always (update :redoable-actions (fnil conj []) (assoc action :redo true))))
+
+(defn- restore-board? [action] (= (:type action) :restore-board))
+
+(defn- enforce-max-number-of-stored-cells [ui-state]
+  (let [indexed (keep-indexed (fn [index action]
+                                (if (restore-board? action)
+                                  [index (board/number-of-on-cells (:payload action))]))
+                              (:redoable-actions ui-state))
+        total (reduce (fn [total [_ n]] (+ total n)) 0 indexed)]
+    (let [start-index (reduce (fn [remaining-total [index n]]
+                                (if (<= remaining-total (:max-number-of-stored-cells ui-state))
+                                  (reduced index)
+                                  (let [remaining-total (- remaining-total n)]
+                                    (if (zero? remaining-total) (reduced index) remaining-total))))
+                              total indexed)]
+      (assoc ui-state :redoable-actions (into [] (subvec (:redoable-actions ui-state) start-index))))))
 
 (defn- store-board [ui-state]
   (-> ui-state
       (push-redoable-actions {:type    :restore-board
                               :payload (:board ui-state)
                               :redo    true})
+      (enforce-max-number-of-stored-cells)
       (assoc :total-duration-ns 0)))
 
 (defn call-and-push [action-fn redoable-action]
@@ -126,13 +143,13 @@
          rest-redoable-actions (pop (:redoable-actions ui-state))]
     (if (empty? rest-redoable-actions)
       (do
-        (assert (= (:type latest-action) :restore-board))
+        (assert (restore-board? latest-action))
         ui-state)
-      (if (= (:type latest-action) :restore-board)
+      (if (restore-board? latest-action)
         (recur (peek rest-redoable-actions) (pop rest-redoable-actions))
         (let [[actions-to-redo rest-redoable-actions] (loop [actions-to-redo `()
                                                              rest-redoable-actions rest-redoable-actions]
-                                                        (if (= (:type (peek actions-to-redo)) :restore-board)
+                                                        (if (restore-board? (peek actions-to-redo))
                                                           [actions-to-redo rest-redoable-actions]
                                                           (recur (conj actions-to-redo (peek rest-redoable-actions))
                                                                  (pop rest-redoable-actions))))
@@ -153,7 +170,7 @@
   (let [board (:board ui-state)
         header (format "--- Conway's Game of Life statistics (%s) ---" (LocalDateTime/now))
         footer (apply str (repeat (count header) "-"))
-        stored-boards (filter #(= (:type %) :restore-board) (:redoable-actions ui-state))]
+        stored-boards (filter #(restore-board? %) (:redoable-actions ui-state))]
     (println header)
     (println (format "Generation                       : %d" (:generation-count board)))
     (println (format "Number of cells                  : %d" (board/number-of-on-cells board)))

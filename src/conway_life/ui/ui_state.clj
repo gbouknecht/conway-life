@@ -2,13 +2,15 @@
   (:require [conway-life.logic.board :as board]))
 
 (defn make-ui-state [geometry
-                     & {:keys [mode show-raster]
-                        :or   {mode        :stopped
-                               show-raster false}}]
-  {:board       (board/make-board)
-   :geometry    geometry
-   :mode        mode
-   :show-raster show-raster})
+                     & {:keys [mode show-raster max-number-of-stored-cells]
+                        :or   {mode                       :stopped
+                               show-raster                false
+                               max-number-of-stored-cells 50000000}}]
+  {:board                      (board/make-board)
+   :geometry                   geometry
+   :mode                       mode
+   :show-raster                show-raster
+   :max-number-of-stored-cells max-number-of-stored-cells})
 (defn clear [ui-state]
   (-> ui-state
       (assoc :board (board/make-board))
